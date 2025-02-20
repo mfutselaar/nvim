@@ -1,0 +1,23 @@
+{
+  "/**": {
+    "body": [
+      "/*",
+      " * $1",
+      " */"
+    ],
+    "prefix": "/**"
+  },
+  "main()": {
+    "body": [
+      "#include <iostream>",
+      "",
+      "int main()",
+      "{",
+      "    $1",
+      "",
+      "    return 0;",
+      "}   "
+    ],
+    "prefix": "main"
+  }
+}

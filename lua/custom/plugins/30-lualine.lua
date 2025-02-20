@@ -6,6 +6,9 @@ return {
       options = {
         theme = 'palenight',
       },
+      sections = { lualine_a = {
+        'vim.fn["codeium#GetStatusString"]()',
+      } },
     }
   end,
 }
