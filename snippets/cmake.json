@@ -1,0 +1,31 @@
+{
+  "basic": {
+    "body": [
+      "cmake_minimum_required(VERSION 3.10)",
+      "project(\\$1)",
+      "",
+      "# Set C++ standard",
+      "set(CMAKE_CXX_STANDARD 11)",
+      "",
+      "# Add executable",
+      "add_executable(\\$1 \\$2)"
+    ],
+    "prefix": [
+      "cpp",
+      "c++"
+    ]
+  },
+  "c": {
+    "body": [
+      "cmake_minimum_required(VERSION 3.10)",
+      "project(\\$1)",
+      "",
+      "set(CMAKE_C_STANDARD 17)",
+      "#set(CMAKE_C_STANDARD_REQUIRED True)",
+      "",
+      "# Add executable",
+      "add_executable(\\$1 \\$2)"
+    ],
+    "prefix": "c"
+  }
+}
