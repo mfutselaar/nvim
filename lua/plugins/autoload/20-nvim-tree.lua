@@ -27,7 +27,7 @@ return {
         vim.cmd ':NvimTreeClose'
         require('barbar.api').set_offset(0)
       else
-        require('barbar.api').set_offset(31)
+        require('barbar.api').set_offset(41)
 
         if cwd then
           vim.cmd ':NvimTreeOpen %:h'

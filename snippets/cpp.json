@@ -7,6 +7,42 @@
     ],
     "prefix": "/**"
   },
+  "class": {
+    "body": [
+      "class $1 {",
+      "public:",
+      "private:",
+      "};"
+    ],
+    "prefix": "class"
+  },
+  "ctrlc": {
+    "body": [
+      "// catch ctrl-c",
+      "std::signal(SIGINT, [](int signal) {",
+      "    std::cerr << std::endl << \"Goodbye!\" << std::endl;",
+      "    ",
+      "    $0",
+      "",
+      "    exit(1);",
+      "});"
+    ],
+    "prefix": "ctrlc"
+  },
+  "imp[xdg-config-home]": {
+    "body": [
+      "std::string xdg_config_home() {",
+      "  std::string config_home = std::getenv(\"XDG_CONFIG_HOME\") ?: (std::string(std::getenv(\"HOME\")) + \"/.config\");",
+      "",
+      "  if (!config_home.empty() && config_home.back() != '/') {",
+      "    config_home += '/';",
+      "  }",
+      "",
+      "  return config_home;",
+      "}"
+    ],
+    "prefix": "imp[xdg-config-home]"
+  },
   "main()": {
     "body": [
       "#include <iostream>",
@@ -16,8 +52,25 @@
       "    $1",
       "",
       "    return 0;",
-      "}   "
+      "};"
     ],
     "prefix": "main"
+  },
+  "mit": {
+    "body": [
+      "// MIT License",
+      "// Copyright (c) 2025 Mathijs Futselaar",
+      "// ",
+      "// Github: https://github.com/mfutselaar/$1",
+      "// Website: https://matttt.nl",
+      "// Email: me@matttt.nl",
+      "// ",
+      "// See the LICENSE file in the project root for more information."
+    ],
+    "prefix": "mit"
+  },
+  "once": {
+    "body": "#pragma once",
+    "prefix": "once"
   }
 }
