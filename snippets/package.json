@@ -18,6 +18,12 @@
           "cmake"
         ],
         "path": "./cmake.json"
+      },
+      {
+        "language": [
+          "sh"
+        ],
+        "path": "./sh.json-1"
       }
     ]
   },

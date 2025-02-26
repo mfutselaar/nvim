@@ -3,17 +3,13 @@ return {
   lazy = false,
   config = function()
     require('themery').setup {
-      globalBefore = [[
-        vim.opt.background = "dark"
-      ]],
+--      globalBefore = [[
+--        vim.opt.background = "dark"
+--      ]],
       themes = {
         {
           name = 'Palenight',
           colorscheme = 'palenight',
-        },
-        {
-          name = 'Sonokai',
-          colorscheme = 'sonokai',
         },
         {
           name = 'Kanagawa Wave',

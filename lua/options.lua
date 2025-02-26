@@ -1,6 +1,8 @@
 vim.opt.number = true
 vim.opt.mouse = "a"
 
+--vim.opt.background = "dark"
+
 vim.opt.guicursor = ""
 
 vim.opt.tabstop = 4
