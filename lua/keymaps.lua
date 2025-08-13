@@ -32,19 +32,27 @@ keymap("n", "<leader>a", "<cmd>:Alpha<CR>", "Open startup screen");
 keymap("n", "<F11>", "<cmd>echo 'Hello World F11'<CR>", "fafddf")
 keymap("n", "<leader>DD", "<cmd>echo 'Hello World'<CR>", "dfdafdsa")
 
+local dap = require("dap")
+local dapui = require("dapui")
+
 wk.add({
   { "<leader>D",  group = "DAP" },
-  { "<C-F2>",     "<cmd>DapTerminate<CR>",        desc = "Terminate" },
-  { "<C-b>",      "<cmd>DapToggleBreakpoint<CR>", desc = "Toggle Breakpoint" },
-  { "<F7>",       "<cmd>DapStepInto<CR>",         desc = "Step Into" },
-  { "<F8>",       "<cmd>DapStepOver<CR>",         desc = "Step Over" },
-  { "<F9>",       "<cmd>DapContinue<CR>",         desc = "Continue" },
-  { "<S-F8>",     "<cmd>DapStepOut<CR>",          desc = "Step out" },
-  { "<leader>Dn", "<cmd>DapNew<CR>",              desc = "Enable Debugger" },
-  { "<leader>Dc", "<cmd>DapClearBreakpoints<CR>", desc = "Clear Breakpoints" },
-  { "<leader>Dd", "<cmd>DapDisconnect<CR>",       desc = "Disconnect" },
-  { "<leader>De", "<cmd>DapEval<CR>",             desc = "Eval" },
-  { "<leader>Dp", "<cmd>DapPause<CR>",            desc = "Pause" },
+  { "<leader>Du",  group = "Debug UI" },
+  { "<C-F2>",     "<cmd>DapTerminate<CR>",                                                   desc = "Terminate" },
+  { "<C-b>",      "<cmd>DapToggleBreakpoint<CR>",                                            desc = "Toggle Breakpoint" },
+  { "<C-S-b>",    function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Set conditional breakpoint" },
+  { "<F7>",       "<cmd>DapStepInto<CR>",                                                    desc = "Step Into" },
+  { "<F8>",       "<cmd>DapStepOver<CR>",                                                    desc = "Step Over" },
+  { "<F9>",       "<cmd>DapContinue<CR>",                                                    desc = "Continue" },
+  { "<S-F8>",     "<cmd>DapStepOut<CR>",                                                     desc = "Step out" },
+  { "<leader>Dn", "<cmd>DapNew<CR>",                                                         desc = "Enable Debugger" },
+  { "<leader>Dc", "<cmd>DapClearBreakpoints<CR>",                                            desc = "Clear Breakpoints" },
+  { "<leader>Dd", "<cmd>DapDisconnect<CR>",                                                  desc = "Disconnect" },
+  { "<leader>De", "<cmd>DapEval<CR>",                                                        desc = "Eval" },
+  { "<leader>Dp", "<cmd>DapPause<CR>",                                                       desc = "Pause" },
+  { "<leader>Dut", function() dapui.toggle() end,                                             desc = "Toggle UI" },
+  { "<leader>Du1", function() dapui.toggle(1) end,                                             desc = "Toggle UI sidebar" },
+  { "<leader>Du2", function() dapui.toggle(2) end,                                             desc = "Toggle UI tray" }
 })
 
 

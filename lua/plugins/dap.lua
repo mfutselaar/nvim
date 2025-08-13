@@ -1,3 +1,13 @@
+local bin_dir = vim.env.HOME .. "/.local/share/nvim/mason/bin/"
+
+local set_local_adapter = function(config, command, args)
+  config.adapters = {
+    type = "executable",
+    command = bin_dir .. command,
+    args = args or {}
+  }
+end
+
 return {
   "rcarriga/nvim-dap-ui",
   dependencies = {
@@ -7,14 +17,6 @@ return {
     "neovim/nvim-lspconfig"
   },
   config = function()
-    local bin_dir = vim.env.HOME .. "/.local/share/nvim/mason/bin/"
-    local set_local_adapter = function(config, command, args)
-      config.adapters = {
-        type = "executable",
-        command = bin_dir .. command,
-        args = args or {}
-      }
-    end
     -- https://github.com/mfussenegger/nvim-dap
     require("mason-nvim-dap").setup({
       ensure_installed = {},
@@ -35,6 +37,26 @@ return {
             },
           }
           require('mason-nvim-dap').default_setup(config)
+        end,
+        delve = function(config)
+          table.insert(config.configurations, 1, {
+            args = function() return vim.split(vim.fn.input("args> "), " ") end,
+            type = "delve",
+            name = "file",
+            request = "launch",
+            program = "${file}",
+            outputMode = "remote",
+          })
+
+          table.insert(config.configurations, 1, {
+            args = function() return vim.split(vim.fn.input("args> "), " ") end,
+            type = "delve",
+            name = "file args",
+            request = "launch",
+            program = "${file}",
+            outputMode = "remote",
+          })
+          require('mason-nvim-dap').default_setup(config)
         end
       }
     })
@@ -53,7 +75,7 @@ return {
       dapui.close()
     end
 
-    vim.fn.sign_define('DapStopped',{ text ='', texthl ='DiffChange', linehl ='Visual', numhl ='DiffChange'})
+    vim.fn.sign_define('DapStopped', { text = '', texthl = 'DiffChange', linehl = 'Visual', numhl = 'DiffChange' })
 
     vim.fn.sign_define('DapBreakpoint', {
       text = '⬤',
