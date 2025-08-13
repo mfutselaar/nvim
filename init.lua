@@ -10,4 +10,5 @@ require 'lazy-plugin-manager'
 require 'plugins'
 
 require 'autocommands'
+require 'custom'
 require 'keymaps'

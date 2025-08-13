@@ -12,6 +12,7 @@ return {
         "L3MON4D3/LuaSnip",
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        "nvimdev/lspsaga.nvim",
     },
 
     config = function()
@@ -23,6 +24,9 @@ return {
         local cmp_lsp = require("cmp_nvim_lsp")
         local luasnip = require("luasnip")
         luasnip.config.setup {}
+        require("luasnip.loaders.from_vscode").lazy_load {
+            paths = "~/.config/nvim/snippets/"
+        }
 
         local capabilities = vim.tbl_deep_extend(
             "force",
@@ -30,17 +34,36 @@ return {
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
 
+        require("lspsaga").setup({
+            lightbulb = {
+                enable = false
+            },
+            symbol_in_winbar = {
+                enable = false
+            }
+        })
+
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "lua_ls",
+                "intelephense",
             },
             handlers = {
-                function(server_name) -- default handler (optional)
-                    require("lspconfig")[server_name].setup {
-                        capabilities = capabilities
-                    }
+                function(server_name) -- default handler
+                    require("lspconfig")[server_name].setup({
+                        capabilities = capabilities,
+                    })
+                end,
+                ["intelephense"] = function()
+                    local lspconfig = require("lspconfig")
+                    lspconfig.intelephense.setup({
+                        capabilities = capabilities,
+                        root_dir = function()
+                            return vim.loop.cwd()
+                        end
+                    })
                 end,
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
@@ -51,7 +74,6 @@ return {
                                 runtime = { version = "Lua 5.1" },
                                 diagnostics = {
                                     globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-
                                 }
                             }
                         }
@@ -93,17 +115,42 @@ return {
             })
         })
 
-
+        -- Updated diagnostic configuration for Neovim 0.11
         vim.diagnostic.config({
-            -- update_in_insert = true,
+            virtual_text = {
+                prefix = '●', -- Customize the prefix for virtual text
+                source = "if_many", -- Show source only if multiple diagnostics
+            },
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = '✘',
+                    [vim.diagnostic.severity.WARN] = '▲',
+                    [vim.diagnostic.severity.INFO] = '»',
+                    [vim.diagnostic.severity.HINT] = '»',
+                },
+            },
             float = {
                 focusable = false,
                 style = "minimal",
                 border = "rounded",
-                source = "always",
+                source = true, -- Changed to boolean for Neovim 0.11
                 header = "",
                 prefix = "",
             },
+            severity_sort = true, -- Enable severity sorting
+            underline = true,
         })
+
+        -- Optional: Set up diagnostic signs explicitly for compatibility
+        local signs = {
+            Error = '✘',
+            Warn = '▲',
+            Info = '»',
+            Hint = '»',
+        }
+        for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+        end
     end
 }

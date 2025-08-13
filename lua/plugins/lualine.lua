@@ -9,7 +9,6 @@ return {
 			sections = {
 				lualine_a = {
 					"mode",
-					'vim.api.nvim_call_function("codeium#GetStatusString", {})',
 				},
 			},
 		})

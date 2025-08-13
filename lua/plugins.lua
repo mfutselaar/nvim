@@ -11,7 +11,6 @@ require("lazy").setup({
 		require("plugins/lualine"),
 		require("plugins/scissors"),
 		require("plugins/barbar"),
-		require("plugins/codeium"),
 		require("plugins/devicons"),
 		require("plugins/alpha"),
 		require("plugins/neogen"),
@@ -19,11 +18,14 @@ require("lazy").setup({
 		require("plugins/undotree"),
 		require("plugins/zenmode"),
 		require("plugins/whichkey"),
+		require("plugins/refactoring"),
+		require("plugins/supermaven"),
+		require("plugins/dap"),
 
 		{ import = "themes" },
 	},
 	install = { colorscheme = { "habamax" } },
-	checker = { enabled = true },
+	checker = { enabled = true, notify = false },
 --	ui = {
 --		icons = {
 --			cmd = "⌘",
