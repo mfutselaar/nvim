@@ -17,9 +17,13 @@ local wk = require("which-key")
 -- Supermaven ------------------------------------
 keymap("n", "<leader>st", "<cmd>SupermavenToggle<CR>", "[S]upermaven [T]oggle")
 
--- LSPSaga ---------------------------------------
+-- LSP -------------------------------------------
 keymap("n", "<C-Space>", "<cmd>Lspsaga hover_doc<CR>", "Display hover doc")
-keymap("n", "<leader>lsr", "<cmd>Lspsaga rename ++project<CR>", "[L]SP [S]aga [R]ename symbol")
+keymap("n", "<leader>lsr", "<cmd>Lspsaga rename ++project<CR>", "Rename symbol")
+keymap("n", "<leader>lr", "<cmd>LspRestart<CR>", "[L]SP [r]estart")
+keymap("n", "<leader>lf", function() vim.lsp.buf.code_action() end, "Fix issue")
+keymap("n", "<leader>ld", function() vim.lsp.buf.definition() end, "Go to definition")
+keymap("n", "gd", function() vim.lsp.buf.definition() end, "Go to definition")
 
 -- General ---------------------------------------
 
@@ -28,9 +32,6 @@ keymap("t", "<Esc><Esc>", "<C-\\><C-n>", "Exit terminal mode")
 keymap("n", "<leader>a", "<cmd>:Alpha<CR>", "Open startup screen");
 
 -- DAP -------------------------------------------
-
-keymap("n", "<F11>", "<cmd>echo 'Hello World F11'<CR>", "fafddf")
-keymap("n", "<leader>DD", "<cmd>echo 'Hello World'<CR>", "dfdafdsa")
 
 local dap = require("dap")
 local dapui = require("dapui")
@@ -110,7 +111,6 @@ end, "[Z]en mode")
 keymap("n", "<leader>?", "<cmd>WhichKey<CR>", "[?]?? Keymap cheatsheet")
 
 -- Tabs -----------------------------------------
-
 
 keymap("n", "<S-Tab>", "<<", nil, true)
 keymap("v", "<Tab>", ">gv", nil, true)

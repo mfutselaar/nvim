@@ -1,14 +1,16 @@
 {
   "basic": {
     "body": [
-      "cmake_minimum_required(VERSION 3.10)",
-      "project(\\$1)",
+      "cmake_minimum_required(version 3.26)",
+      "project($1 languages cxx)",
       "",
-      "# Set C++ standard",
-      "set(CMAKE_CXX_STANDARD 11)",
+      "set(cmake_cxx_standard $2)",
+      "set(cmake_cxx_standard_required on)",
+      "# generate compile_commands.json for code completion tools and ides like clion",
+      "set(cmake_export_compile_commands on)",
       "",
       "# Add executable",
-      "add_executable(\\$1 \\$2)"
+      "add_executable(${PROJECT_NAME} $3)"
     ],
     "prefix": [
       "cpp",

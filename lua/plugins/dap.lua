@@ -39,6 +39,7 @@ return {
           require('mason-nvim-dap').default_setup(config)
         end,
         delve = function(config)
+          set_local_adapter(config, "dlv")
           table.insert(config.configurations, 1, {
             args = function() return vim.split(vim.fn.input("args> "), " ") end,
             type = "delve",

@@ -1,0 +1,10 @@
+{
+  "iferr": {
+    "body": [
+      "if err != nil {",
+      "    log.Fatal(\"$1: \", err)",
+      "}"
+    ],
+    "prefix": "iferr"
+  }
+}
