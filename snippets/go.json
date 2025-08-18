@@ -1,10 +1,27 @@
 {
+  "forin": {
+    "body": [
+      "for _, $1 := range $2 {",
+      "}"
+    ],
+    "prefix": "forin"
+  },
   "iferr": {
     "body": [
       "if err != nil {",
-      "    log.Fatal(\"$1: \", err)",
+      "    log.Fatal(\"$1\", err)",
       "}"
     ],
     "prefix": "iferr"
+  },
+  "main": {
+    "body": [
+      "package main",
+      "",
+      "func main() {",
+      "\tprintln(\"Hello World!\")",
+      "}"
+    ],
+    "prefix": "main"
   }
 }

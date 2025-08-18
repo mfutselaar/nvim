@@ -24,12 +24,15 @@ keymap("n", "<leader>lr", "<cmd>LspRestart<CR>", "[L]SP [r]estart")
 keymap("n", "<leader>lf", function() vim.lsp.buf.code_action() end, "Fix issue")
 keymap("n", "<leader>ld", function() vim.lsp.buf.definition() end, "Go to definition")
 keymap("n", "gd", function() vim.lsp.buf.definition() end, "Go to definition")
+keymap("n", "fr", function() vim.lsp.buf.references() end, "Find all references to cursor")
 
 -- General ---------------------------------------
 
 keymap("n", "<Esc>", "<cmd>nohlsearch<Cr>")
 keymap("t", "<Esc><Esc>", "<C-\\><C-n>", "Exit terminal mode")
 keymap("n", "<leader>a", "<cmd>:Alpha<CR>", "Open startup screen");
+keymap("n", "<leader>ft", ":1,$d<CR>", "Truncate file")
+keymap("n", "<leader>jq", "%!jq .<CR>", "Format JSON")
 
 -- DAP -------------------------------------------
 
@@ -37,23 +40,23 @@ local dap = require("dap")
 local dapui = require("dapui")
 
 wk.add({
-  { "<leader>D",  group = "DAP" },
+  { "<leader>D",   group = "DAP" },
   { "<leader>Du",  group = "Debug UI" },
-  { "<C-F2>",     "<cmd>DapTerminate<CR>",                                                   desc = "Terminate" },
-  { "<C-b>",      "<cmd>DapToggleBreakpoint<CR>",                                            desc = "Toggle Breakpoint" },
-  { "<C-S-b>",    function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Set conditional breakpoint" },
-  { "<F7>",       "<cmd>DapStepInto<CR>",                                                    desc = "Step Into" },
-  { "<F8>",       "<cmd>DapStepOver<CR>",                                                    desc = "Step Over" },
-  { "<F9>",       "<cmd>DapContinue<CR>",                                                    desc = "Continue" },
-  { "<S-F8>",     "<cmd>DapStepOut<CR>",                                                     desc = "Step out" },
-  { "<leader>Dn", "<cmd>DapNew<CR>",                                                         desc = "Enable Debugger" },
-  { "<leader>Dc", "<cmd>DapClearBreakpoints<CR>",                                            desc = "Clear Breakpoints" },
-  { "<leader>Dd", "<cmd>DapDisconnect<CR>",                                                  desc = "Disconnect" },
-  { "<leader>De", "<cmd>DapEval<CR>",                                                        desc = "Eval" },
-  { "<leader>Dp", "<cmd>DapPause<CR>",                                                       desc = "Pause" },
+  { "<C-F2>",      "<cmd>DapTerminate<CR>",                                                   desc = "Terminate" },
+  { "<C-b>",       "<cmd>DapToggleBreakpoint<CR>",                                            desc = "Toggle Breakpoint" },
+  { "<C-S-b>",     function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end, desc = "Set conditional breakpoint" },
+  { "<F7>",        "<cmd>DapStepInto<CR>",                                                    desc = "Step Into" },
+  { "<F8>",        "<cmd>DapStepOver<CR>",                                                    desc = "Step Over" },
+  { "<F9>",        "<cmd>DapContinue<CR>",                                                    desc = "Continue" },
+  { "<S-F8>",      "<cmd>DapStepOut<CR>",                                                     desc = "Step out" },
+  { "<leader>Dn",  "<cmd>DapNew<CR>",                                                         desc = "Enable Debugger" },
+  { "<leader>Dc",  "<cmd>DapClearBreakpoints<CR>",                                            desc = "Clear Breakpoints" },
+  { "<leader>Dd",  "<cmd>DapDisconnect<CR>",                                                  desc = "Disconnect" },
+  { "<leader>De",  "<cmd>DapEval<CR>",                                                        desc = "Eval" },
+  { "<leader>Dp",  "<cmd>DapPause<CR>",                                                       desc = "Pause" },
   { "<leader>Dut", function() dapui.toggle() end,                                             desc = "Toggle UI" },
-  { "<leader>Du1", function() dapui.toggle(1) end,                                             desc = "Toggle UI sidebar" },
-  { "<leader>Du2", function() dapui.toggle(2) end,                                             desc = "Toggle UI tray" }
+  { "<leader>Du1", function() dapui.toggle(1) end,                                            desc = "Toggle UI sidebar" },
+  { "<leader>Du2", function() dapui.toggle(2) end,                                            desc = "Toggle UI tray" }
 })
 
 
