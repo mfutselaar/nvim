@@ -2,8 +2,6 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
         "stevearc/conform.nvim",
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -14,11 +12,9 @@ return {
         "j-hui/fidget.nvim",
         "nvimdev/lspsaga.nvim",
     },
-
     config = function()
         require("conform").setup({
-            formatters_by_ft = {
-            }
+            formatters_by_ft = {}
         })
         local cmp = require('cmp')
         local cmp_lsp = require("cmp_nvim_lsp")
@@ -27,13 +23,11 @@ return {
         require("luasnip.loaders.from_vscode").lazy_load {
             paths = "~/.config/nvim/snippets/"
         }
-
         local capabilities = vim.tbl_deep_extend(
             "force",
             {},
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
-
         require("lspsaga").setup({
             lightbulb = {
                 enable = false
@@ -42,50 +36,76 @@ return {
                 enable = false
             }
         })
-
         require("fidget").setup({})
-        require("mason").setup()
-        require("mason-lspconfig").setup({
-            ensure_installed = {
-                "lua_ls",
-                "intelephense",
-            },
-            handlers = {
-                function(server_name) -- default handler
-                    require("lspconfig")[server_name].setup({
-                        capabilities = capabilities,
-                    })
-                end,
-                ["intelephense"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.intelephense.setup({
-                        capabilities = capabilities,
-                        root_dir = function()
-                            return vim.loop.cwd()
-                        end
-                    })
-                end,
-                ["lua_ls"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.lua_ls.setup {
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                runtime = { version = "Lua 5.1" },
-                                diagnostics = {
-                                    globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                                }
-                            }
-                        }
+
+        -- Set up LSP servers directly with lspconfig
+        local lspconfig = require("lspconfig")
+
+        -- lua_ls configuration
+        lspconfig.lua_ls.setup {
+            capabilities = capabilities,
+            settings = {
+                Lua = {
+                    runtime = { version = "Lua 5.1" },
+                    diagnostics = {
+                        globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
                     }
-                end,
+                }
             }
+        }
+
+        -- bash ls
+        lspconfig.bashls.setup({
+            capabilities = capabilities
+        })
+
+        -- intelephense configuration
+        lspconfig.intelephense.setup({
+            capabilities = capabilities,
+            root_dir = function()
+                return vim.loop.cwd()
+            end
+        })
+
+        -- clangd
+        lspconfig.clangd.setup({
+            capabilities = capabilities
+        })
+
+        -- cmake
+        lspconfig.cmake.setup({
+            capabilities = capabilities
+        })
+
+        -- docker
+        lspconfig.dockerls.setup({
+            capabilities = capabilities
+        })
+
+        -- gopls
+        lspconfig.gopls.setup({
+            capabilities = capabilities
+        })
+
+        -- html
+        lspconfig.html.setup({
+            capabilities = capabilities
+        })
+
+        -- laravel
+        lspconfig.laravel_ls.setup({
+            capabilities = capabilities
+        })
+
+        -- rust
+        lspconfig.rust_analyzer.setup({
+            capabilities = capabilities
         })
 
         cmp.setup({
             snippet = {
                 expand = function(args)
-                    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+                    require('luasnip').lsp_expand(args.body)
                 end,
             },
             mapping = cmp.mapping.preset.insert({
@@ -109,17 +129,17 @@ return {
             }),
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
+                { name = 'luasnip' },
             }, {
                 { name = 'buffer' },
             })
         })
 
-        -- Updated diagnostic configuration for Neovim 0.11
+        -- Diagnostic configuration
         vim.diagnostic.config({
             virtual_text = {
-                prefix = '●', -- Customize the prefix for virtual text
-                source = "if_many", -- Show source only if multiple diagnostics
+                prefix = '●',
+                source = "if_many",
             },
             signs = {
                 text = {
@@ -133,15 +153,15 @@ return {
                 focusable = false,
                 style = "minimal",
                 border = "rounded",
-                source = true, -- Changed to boolean for Neovim 0.11
+                source = true,
                 header = "",
                 prefix = "",
             },
-            severity_sort = true, -- Enable severity sorting
+            severity_sort = true,
             underline = true,
         })
 
-        -- Optional: Set up diagnostic signs explicitly for compatibility
+        -- Set up diagnostic signs
         local signs = {
             Error = '✘',
             Warn = '▲',

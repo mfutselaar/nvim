@@ -13,55 +13,9 @@ return {
   dependencies = {
     "mfussenegger/nvim-dap",
     "nvim-neotest/nvim-nio",
-    "jay-babu/mason-nvim-dap.nvim",
     "neovim/nvim-lspconfig"
   },
   config = function()
-    -- https://github.com/mfussenegger/nvim-dap
-    require("mason-nvim-dap").setup({
-      ensure_installed = {},
-      automatic_installation = false,
-      handlers = {
-        function(config)
-          require("mason-nvim-dap").default_setup(config)
-        end,
-        php = function(config)
-          set_local_adapter(config, "php-debug-adapter")
-          config.configurations.php = {
-            {
-              type = 'php',
-              request = 'launch',
-              name = 'Listen for xdebug',
-              port = '9003',
-              log = true,
-            },
-          }
-          require('mason-nvim-dap').default_setup(config)
-        end,
-        delve = function(config)
-          set_local_adapter(config, "dlv")
-          table.insert(config.configurations, 1, {
-            args = function() return vim.split(vim.fn.input("args> "), " ") end,
-            type = "delve",
-            name = "file",
-            request = "launch",
-            program = "${file}",
-            outputMode = "remote",
-          })
-
-          table.insert(config.configurations, 1, {
-            args = function() return vim.split(vim.fn.input("args> "), " ") end,
-            type = "delve",
-            name = "file args",
-            request = "launch",
-            program = "${file}",
-            outputMode = "remote",
-          })
-          require('mason-nvim-dap').default_setup(config)
-        end
-      }
-    })
-
     local dap, dapui = require("dap"), require("dapui")
 
     dapui.setup()
