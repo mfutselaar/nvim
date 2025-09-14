@@ -23,5 +23,33 @@
       "}"
     ],
     "prefix": "main"
+  },
+  "unmarshaljson": {
+    "body": [
+      "func (target *$1) UnmarshalJSON(data []byte) error {",
+      "\ttype Alias $1",
+      "\taux := &struct {",
+      "\t\t// Check for optional field: Property *type `json:\"property\"`",
+      "\t\t*Alias",
+      "\t}{",
+      "\t\tAlias: (*Alias)(p),",
+      "\t}",
+      "",
+      "\tif err := json.Unmarshal(data, &aux); err != nil {",
+      "\t\treturn err",
+      "\t}",
+      "",
+      "    // Optional example:",
+      "",
+      "\t// if aux.Property == nil {",
+      "\t//  \ttarget.Property = true",
+      "\t// } else {",
+      "\t//  \ttarget.Property = *aux.Property",
+      "\t// }",
+      "",
+      "\treturn nil",
+      "}"
+    ],
+    "prefix": "unmarshaljson"
   }
 }

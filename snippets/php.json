@@ -11,6 +11,14 @@
     ],
     "prefix": "<?php"
   },
+  "class": {
+    "body": [
+      "class $1 {",
+      "",
+      "}"
+    ],
+    "prefix": "class"
+  },
   "strict": {
     "body": "declare(strict_types=1);",
     "prefix": "!strict"
