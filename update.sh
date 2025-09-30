@@ -21,12 +21,13 @@ install_npm_global dockerfile-language-server-nodejs
 install_npm_global intelephense
 install_go_package golang.org/x/tools/gopls
 install_go_package github.com/laravel-ls/laravel-ls/cmd/laravel-ls
+install_go_package github.com/go-delve/delve/cmd/dlv
 
 # Rust analyzer
 mkdir -p ~/.local/bin
 
 if [ "$OS" = "Linux" ]; then
-  yay -S lua-language-server cmake-language-server --noconfirm
+  yay -S lua-language-server cmake-language-server netcoredbg --noconfirm
   sudo pacman -S clang --noconfirm
   curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - > ~/.local/bin/rust-analyzer
 elif [ "$OS" = "Darwin" ]; then
@@ -38,6 +39,11 @@ else
 fi
 
 chmod +x ~/.local/bin/rust-analyzer
+
+git clone https://github.com/xdebug/vscode-php-debug.git ~/.local/share/vscode-php-debug
+cd ~/.local/share/vscode-php-debug
+npm install && npm run build
+cd -
 
 echo "✅ Setup complete for $OS"
 

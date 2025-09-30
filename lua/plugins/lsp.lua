@@ -2,47 +2,44 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
         "stevearc/conform.nvim",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/nvim-cmp",
+        {
+            "saghen/blink.cmp",
+            version = "1.*"
+        },
         "L3MON4D3/LuaSnip",
-        "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
         "nvimdev/lspsaga.nvim",
+        "seblyng/roslyn.nvim"
     },
     config = function()
+        -- Formatter
         require("conform").setup({
             formatters_by_ft = {}
         })
-        local cmp = require('cmp')
-        local cmp_lsp = require("cmp_nvim_lsp")
+
+        -- Snippets
         local luasnip = require("luasnip")
         luasnip.config.setup {}
         require("luasnip.loaders.from_vscode").lazy_load {
             paths = "~/.config/nvim/snippets/"
         }
-        local capabilities = vim.tbl_deep_extend(
-            "force",
-            {},
-            vim.lsp.protocol.make_client_capabilities(),
-            cmp_lsp.default_capabilities())
+
+        -- Capabilities (Blink replaces cmp-nvim-lsp)
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+        -- UI helpers
         require("lspsaga").setup({
-            lightbulb = {
-                enable = false
-            },
-            symbol_in_winbar = {
-                enable = false
-            }
+            lightbulb = { enable = false },
+            symbol_in_winbar = { enable = false }
         })
         require("fidget").setup({})
 
-        -- Set up LSP servers directly with lspconfig
-        local lspconfig = require("lspconfig")
+        ----------------------------------------------------------------------
+        -- LSP CONFIGS (new style: vim.lsp.config only)
+        ----------------------------------------------------------------------
 
-        -- lua_ls configuration
-        lspconfig.lua_ls.setup {
+        -- Lua
+        vim.lsp.config("lua_ls", {
             capabilities = capabilities,
             settings = {
                 Lua = {
@@ -52,101 +49,85 @@ return {
                     }
                 }
             }
-        }
-
-        -- bash ls
-        lspconfig.bashls.setup({
-            capabilities = capabilities
         })
+        vim.lsp.enable("lua_ls")
 
-        -- intelephense configuration
-        lspconfig.intelephense.setup({
+        -- Bash
+        vim.lsp.config("bashls", { capabilities = capabilities })
+        vim.lsp.enable("bashls")
+
+        -- Intelephense
+        vim.lsp.config("intelephense", {
             capabilities = capabilities,
             root_dir = function()
                 return vim.loop.cwd()
             end
         })
 
-        -- clangd
-        lspconfig.clangd.setup({
-            capabilities = capabilities
-        })
+        -- Clangd
+        vim.lsp.config("clangd", { capabilities = capabilities })
+        vim.lsp.enable("clangd")
 
-        -- cmake
-        lspconfig.cmake.setup({
-            capabilities = capabilities
-        })
+        -- CMake
+        vim.lsp.config("cmake", { capabilities = capabilities })
+        vim.lsp.enable("cmake")
 
-        -- docker
-        lspconfig.dockerls.setup({
-            capabilities = capabilities
-        })
+        -- Docker
+        vim.lsp.config("dockerls", { capabilities = capabilities })
+        vim.lsp.enable("dockerls")
 
-        -- gopls
-        lspconfig.gopls.setup({
-            capabilities = capabilities
-        })
+        -- Go
+        vim.lsp.config("gopls", { capabilities = capabilities })
+        vim.lsp.enable("gopls")
 
-        -- html
-        lspconfig.html.setup({
-            capabilities = capabilities
-        })
+        -- HTML
+        vim.lsp.config("html", { capabilities = capabilities })
+        vim.lsp.enable("html")
 
-        -- laravel
-        lspconfig.laravel_ls.setup({
-            capabilities = capabilities
-        })
+        -- Laravel
+        vim.lsp.config("laravel_ls", { capabilities = capabilities })
+        vim.lsp.enable("laravel_ls")
 
-        -- rust
-        lspconfig.rust_analyzer.setup({
-            capabilities = capabilities
-        })
+        -- Rust
+        vim.lsp.config("rust_analyzer", { capabilities = capabilities })
+        vim.lsp.enable("rust_analyzer")
 
-        cmp.setup({
-            snippet = {
-                expand = function(args)
-                    require('luasnip').lsp_expand(args.body)
-                end,
+
+        -- .NET (Roslyn)
+        vim.env.PATH = vim.env.PATH .. vim.fn.expand(":$HOME/.local/share/roslyn/content/LanguageServer/linux-x64")
+        -- vim.lsp.config("roslyn_ls", { capabilities = capabilities })
+
+        ----------------------------------------------------------------------
+        -- Blink completion setup
+        ----------------------------------------------------------------------
+        require("blink-cmp").setup({
+            keymap = {
+                preset = "default",
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ["<CR>"] = { "accept", "fallback" },
+                ["<C-Space>"] = { "show", "fallback" },
             },
-            mapping = cmp.mapping.preset.insert({
-                ['<Up>'] = cmp.mapping.select_prev_item(),
-                ['<Down>'] = cmp.mapping.select_next_item(),
-                ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-                ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                ['<Tab>'] = cmp.mapping.confirm { select = true },
-                ['<Cr>'] = cmp.mapping.confirm { select = true },
-                ['<C-Space>'] = cmp.mapping.complete {},
-                ['<C-l>'] = cmp.mapping(function()
-                    if luasnip.expand_or_locally_jumpable() then
-                        luasnip.expand_or_jump()
-                    end
-                end, { 'i', 's' }),
-                ['<C-h>'] = cmp.mapping(function()
-                    if luasnip.locally_jumpable(-1) then
-                        luasnip.jump(-1)
-                    end
-                end, { 'i', 's' }),
-            }),
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'luasnip' },
-            }, {
-                { name = 'buffer' },
-            })
+            sources = {
+                default = { "lsp", "snippets", "path", "buffer" }
+            },
+            completion = {
+                accept = { auto_brackets = { enabled = true } }
+            },
+            snippets = { preset = 'luasnip' }
         })
 
-        -- Diagnostic configuration
+        ----------------------------------------------------------------------
+        -- Diagnostics
+        ----------------------------------------------------------------------
         vim.diagnostic.config({
-            virtual_text = {
-                prefix = '●',
-                source = "if_many",
-            },
+            virtual_text = { prefix = '●', source = "if_many" },
             signs = {
                 text = {
                     [vim.diagnostic.severity.ERROR] = '✘',
-                    [vim.diagnostic.severity.WARN] = '▲',
-                    [vim.diagnostic.severity.INFO] = '»',
-                    [vim.diagnostic.severity.HINT] = '»',
+                    [vim.diagnostic.severity.WARN]  = '▲',
+                    [vim.diagnostic.severity.INFO]  = '»',
+                    [vim.diagnostic.severity.HINT]  = '»',
                 },
             },
             float = {
@@ -161,13 +142,7 @@ return {
             underline = true,
         })
 
-        -- Set up diagnostic signs
-        local signs = {
-            Error = '✘',
-            Warn = '▲',
-            Info = '»',
-            Hint = '»',
-        }
+        local signs = { Error = '✘', Warn = '▲', Info = '»', Hint = '»' }
         for type, icon in pairs(signs) do
             local hl = "DiagnosticSign" .. type
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
