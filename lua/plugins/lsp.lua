@@ -94,7 +94,7 @@ return {
 
 
         -- .NET (Roslyn)
-        vim.env.PATH = vim.env.PATH .. vim.fn.expand(":$HOME/.local/share/roslyn/content/LanguageServer/linux-x64")
+        -- vim.env.PATH = vim.env.PATH .. vim.fn.expand(":$HOME/.local/share/roslyn/content/LanguageServer/linux-x64")
         -- vim.lsp.config("roslyn_ls", { capabilities = capabilities })
 
         ----------------------------------------------------------------------
